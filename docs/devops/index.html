@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevOps Tech Radar - UMSCHOOL</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="../radar.js"></script>
+    <link rel="stylesheet" href="../radar.css">
+    <style>
+        .breadcrumb {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+        .breadcrumb a {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .breadcrumb a:hover {
+            color: #333;
+            text-decoration: underline;
+        }
+        .breadcrumb span {
+            color: #999;
+            margin: 0 8px;
+        }
+
+        #legend {
+            font-family: 'Inter', sans-serif;
+            margin: 40px auto;
+            max-width: 800px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+        }
+        #legend h2 {
+            margin-top: 0;
+            font-size: 1.5em;
+            color: #333;
+        }
+        #legend dl {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 10px 20px;
+        }
+        #legend dt {
+            font-weight: 600;
+            color: #111;
+        }
+        #legend dd {
+            margin: 0;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="breadcrumb">
+        <a href="../">← Главная</a> <span>/</span> <strong>DevOps</strong>
+    </div>
+    
+    <svg id="radar" width="1450" height="1000"></svg>
+    
+    <div id="legend">
+        <h2>Legend</h2>
+        <dl>
+            <dt>Adopt</dt>
+            <dd>Основные, проверенные технологии, которые мы используем каждый день.</dd>
+            <dt>Trial</dt>
+            <dd>Перспективные технологии, которые мы уже успешно пробуем в проектах.</dd>
+            <dt>Assess</dt>
+            <dd>Новые инструменты, которые мы исследуем и оцениваем.</dd>
+            <dt>Hold</dt>
+            <dd>Устаревшие технологии, от которых мы постепенно отказываемся.</dd>
+        </dl>
+    </div>
+
+    <script>
+        fetch('config.json')
+            .then(response => response.json())
+            .then(config => {
+                radar_visualization({
+                    svg_id: "radar",
+                    width: 1450,
+                    height: 1000,
+                    colors: { background: "#fff", grid: "#dddde0", inactive: "#ddd" },
+                    title: "DevOps Tech Radar",
+                    date: config.date,
+                    quadrants: [
+                        { name: "Platforms & Infrastructure" },
+                        { name: "Delivery & Automation" },
+                        { name: "Observability" },
+                        { name: "Tools & Collaboration" }
+                    ],
+                    rings: [
+                        { name: "Adopt", color: "#5EAD56" },
+                        { name: "Trial", color: "#B8D431" },
+                        { name: "Assess", color: "#E0C82B" },
+                        { name: "Hold", color: "#E0942B" }
+                    ],
+                    print_layout: true,
+                    entries: config.entries
+                });
+            })
+            .catch(error => console.error('Error loading config:', error));
+    </script>
+
+
+</body></html>
